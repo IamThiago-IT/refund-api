@@ -35,7 +35,9 @@ export default class RefundsController {
    * Show individual record
    */
   async show({ request }: HttpContext) {
-    const payload = await request.validateUsing(showRefundValidator)
+    const payload = await request.validateUsing(showRefundValidator, {
+      data: { params: request.params() },
+    })
 
     return this.refundService.findById(payload)
   }
@@ -44,7 +46,9 @@ export default class RefundsController {
    * Delete record
    */
   async destroy({ request }: HttpContext) {
-    const payload = await request.validateUsing(softDeleteRefundValidator)
+    const payload = await request.validateUsing(softDeleteRefundValidator, {
+      data: { params: request.params() },
+    })
 
     return this.refundService.softDelete(payload)
   }

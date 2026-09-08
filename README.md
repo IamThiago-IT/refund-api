@@ -4,17 +4,17 @@ A REST API for managing financial refund requests with receipt (proof-of-purchas
 
 ## Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| Language | TypeScript (~5.8), ESM modules |
-| Runtime | Node.js |
-| Framework | [AdonisJS v6](https://adonisjs.com) |
-| ORM | [Lucid](https://lucid.adonisjs.com) v21 |
-| Database | SQLite via `better-sqlite3` |
-| Validation | [VineJS](https://vinejs.dev) v3 |
+| Category     | Technology                                                                  |
+| ------------ | --------------------------------------------------------------------------- |
+| Language     | TypeScript (~5.8), ESM modules                                              |
+| Runtime      | Node.js                                                                     |
+| Framework    | [AdonisJS v6](https://adonisjs.com)                                         |
+| ORM          | [Lucid](https://lucid.adonisjs.com) v21                                     |
+| Database     | SQLite via `better-sqlite3`                                                 |
+| Validation   | [VineJS](https://vinejs.dev) v3                                             |
 | File Storage | [AdonisJS Drive](https://docs.adonisjs.com/guides/drive) (local filesystem) |
-| Testing | [Japa](https://japa.dev) v4 |
-| Linting | ESLint 9 + Prettier |
+| Testing      | [Japa](https://japa.dev) v4                                                 |
+| Linting      | ESLint 9 + Prettier                                                         |
 
 ## Prerequisites
 
@@ -42,26 +42,28 @@ The server will be available at `http://localhost:3333`.
 
 ## Environment Variables
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `NODE_ENV` | Yes | `development`, `production`, or `test` |
-| `PORT` | Yes | HTTP server port (default: `3333`) |
-| `HOST` | Yes | Host address (default: `localhost`) |
-| `APP_KEY` | Yes | Secret key for encryption and signed URLs |
-| `LOG_LEVEL` | Yes | `fatal` \| `error` \| `warn` \| `info` \| `debug` \| `trace` \| `silent` |
-| `DRIVE_DISK` | Yes | File storage driver (`fs`) |
-| `TZ` | No | Timezone (default: `UTC`) |
+| Variable     | Required | Description                                                              |
+| ------------ | -------- | ------------------------------------------------------------------------ |
+| `NODE_ENV`   | Yes      | `development`, `production`, or `test`                                   |
+| `PORT`       | Yes      | HTTP server port (default: `3333`)                                       |
+| `HOST`       | Yes      | Host address (default: `localhost`)                                      |
+| `APP_KEY`    | Yes      | Secret key for encryption and signed URLs                                |
+| `APP_NAME`   | No       | App name used by logger (default: `refund-api`)                          |
+| `LOG_LEVEL`  | Yes      | `fatal` \| `error` \| `warn` \| `info` \| `debug` \| `trace` \| `silent` |
+| `DRIVE_DISK` | Yes      | File storage driver (`fs`)                                               |
+| `CORS_ORIGIN`| No       | Comma-separated allowed origins (e.g. `http://localhost:3333`)           |
+| `TZ`         | No       | Timezone (default: `UTC`)                                                |
 
 ## API Endpoints
 
 ### Refunds
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/refunds` | List refunds (paginated). Query params: `page` (number), `q` (search by title). |
-| `POST` | `/refunds` | Create a new refund. |
-| `GET` | `/refunds/:id` | Get a single refund by UUID. |
-| `DELETE` | `/refunds/:id` | Soft-delete a refund (cascades to receipt). |
+| Method   | Endpoint       | Description                                                                     |
+| -------- | -------------- | ------------------------------------------------------------------------------- |
+| `GET`    | `/refunds`     | List refunds (paginated). Query params: `page` (number), `q` (search by title). |
+| `POST`   | `/refunds`     | Create a new refund.                                                            |
+| `GET`    | `/refunds/:id` | Get a single refund by UUID.                                                    |
+| `DELETE` | `/refunds/:id` | Soft-delete a refund (cascades to receipt).                                     |
 
 **POST `/refunds` body:**
 
@@ -69,7 +71,7 @@ The server will be available at `http://localhost:3333`.
 {
   "title": "Hotel in São Paulo",
   "category": "hosting",
-  "value": 150.50,
+  "value": 150.5,
   "receipt": "uuid-of-an-uploaded-receipt"
 }
 ```
@@ -78,12 +80,12 @@ The server will be available at `http://localhost:3333`.
 
 ### Receipts
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/receipts` | Upload a receipt file (multipart). Max 2 MB. Accepted: `jpg`, `jpeg`, `png`, `pdf`. |
-| `GET` | `/receipts/:id` | Get receipt metadata by UUID. |
-| `DELETE` | `/receipts/:id` | Hard-delete a receipt and its file. |
-| `GET` | `/receipts/download/:id` | Redirect to a signed download URL (1-minute expiry). |
+| Method   | Endpoint                 | Description                                                                         |
+| -------- | ------------------------ | ----------------------------------------------------------------------------------- |
+| `POST`   | `/receipts`              | Upload a receipt file (multipart). Max 2 MB. Accepted: `jpg`, `jpeg`, `png`, `pdf`. |
+| `GET`    | `/receipts/:id`          | Get receipt metadata by UUID.                                                       |
+| `DELETE` | `/receipts/:id`          | Hard-delete a receipt and its file.                                                 |
+| `GET`    | `/receipts/download/:id` | Redirect to a signed download URL (1-minute expiry).                                |
 
 ## Architecture
 
@@ -153,9 +155,12 @@ docker compose --profile dev up --build
 - SQLite DB (`tmp/db.sqlite3`) and uploads (`storage/uploads`) are persisted via named volumes `sqlite_data` / `uploads_data`.
 - Healthcheck hits `GET /refunds` every 30s.
 
-| File | Purpose |
-|------|---------|
-| `Dockerfile` | `base` → `deps` → `build` → `production` (default) and `development` target |
-| `docker-compose.yml` | `app` (production) + `app-dev` (profile `dev`, HMR, bind mount) |
-| `.dockerignore` | Excludes `node_modules`, `build`, `tmp`, etc. from context |
+| File                 | Purpose                                                                     |
+| -------------------- | --------------------------------------------------------------------------- |
+| `Dockerfile`         | `base` → `deps` → `build` → `production` (default) and `development` target |
+| `docker-compose.yml` | `app` (production) + `app-dev` (profile `dev`, HMR, bind mount)             |
+| `.dockerignore`      | Excludes `node_modules`, `build`, `tmp`, etc. from context                  |
+
+```
+
 ```

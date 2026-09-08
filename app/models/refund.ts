@@ -20,6 +20,7 @@ export default class Refund extends BaseModel {
   @column({
     meta: 'The value is stored in cents in the database.',
     consume: (value: number) => value / 100,
+    prepare: (value: number) => Math.round(value * 100),
   })
   declare value: number
 

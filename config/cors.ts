@@ -1,3 +1,4 @@
+import env from '#start/env'
 import { defineConfig } from '@adonisjs/cors'
 
 /**
@@ -6,9 +7,16 @@ import { defineConfig } from '@adonisjs/cors'
  *
  * https://docs.adonisjs.com/guides/security/cors
  */
+const allowedOrigins = env.get('CORS_ORIGIN')
+  ? env
+      .get('CORS_ORIGIN')!
+      .split(',')
+      .map((o) => o.trim())
+  : []
+
 const corsConfig = defineConfig({
   enabled: true,
-  origin: true,
+  origin: allowedOrigins.length > 0 ? allowedOrigins : false,
   methods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE'],
   headers: true,
   exposeHeaders: [],

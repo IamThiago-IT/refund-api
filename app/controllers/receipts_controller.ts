@@ -23,7 +23,9 @@ export default class ReceiptsController {
    * Show individual record
    */
   async show({ request }: HttpContext) {
-    const payload = await request.validateUsing(showReceiptValidator)
+    const payload = await request.validateUsing(showReceiptValidator, {
+      data: { params: request.params() },
+    })
 
     return this.receiptService.findById(payload)
   }
@@ -32,7 +34,9 @@ export default class ReceiptsController {
    * Delete record
    */
   async destroy({ request }: HttpContext) {
-    const payload = await request.validateUsing(deleteReceiptValidator)
+    const payload = await request.validateUsing(deleteReceiptValidator, {
+      data: { params: request.params() },
+    })
 
     return this.receiptService.delete(payload)
   }
