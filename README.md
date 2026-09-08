@@ -128,3 +128,34 @@ The Japa test runner is fully configured with the AdonisJS plugin, API client, a
 npm run lint       # check with ESLint
 npm run format     # auto-format with Prettier
 ```
+
+## Docker
+
+Production image is multi-stage (Node 22 Alpine) with `better-sqlite3` build deps and auto-migrations.
+
+```bash
+# 1. Create env file and set APP_KEY (required for signed URLs)
+cp .env.example .env
+node ace generate:key   # paste output into APP_KEY
+
+# Production (build + run)
+docker compose up --build -d
+# or explicitly: docker build -t refund-api --target production .
+
+# Logs / migrations run automatically on container start
+docker compose logs -f app
+
+# Development with HMR (hot reload, source mounted)
+docker compose --profile dev up --build
+```
+
+- `HOST=0.0.0.0` is set in `docker-compose.yml` so the server is reachable outside the container (keep `HOST=localhost` for local dev without Docker).
+- SQLite DB (`tmp/db.sqlite3`) and uploads (`storage/uploads`) are persisted via named volumes `sqlite_data` / `uploads_data`.
+- Healthcheck hits `GET /refunds` every 30s.
+
+| File | Purpose |
+|------|---------|
+| `Dockerfile` | `base` → `deps` → `build` → `production` (default) and `development` target |
+| `docker-compose.yml` | `app` (production) + `app-dev` (profile `dev`, HMR, bind mount) |
+| `.dockerignore` | Excludes `node_modules`, `build`, `tmp`, etc. from context |
+```
