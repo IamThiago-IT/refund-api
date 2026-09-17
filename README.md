@@ -116,6 +116,15 @@ refund-api/
 └── tests/                  # Japa test suite (infrastructure ready)
 ```
 
+## Documentação da API
+
+A documentação interativa está disponível via Swagger UI:
+
+- **Swagger JSON**: `http://localhost:3333/swagger`
+- **Swagger UI**: `http://localhost:3333/docs`
+
+A documentação é gerada automaticamente a partir das rotas, modelos e validadores do projeto utilizando o [adonis-autoswagger](https://github.com/ad-on-is/adonis-autoswagger).
+
 ## Testing
 
 ```bash
